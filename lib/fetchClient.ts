@@ -1,25 +1,33 @@
 import { APIErrorResponse } from '@/types/types';
-import { auth } from '@clerk/nextjs/server';
 
-export async function fetchServer<T>(path: string, options?: RequestInit): Promise<T> {
+export async function fetchClient<T>(
+  path: string,
+  token: string,
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE',
+  body?: unknown,
+  options?: RequestInit,
+): Promise<T> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const { getToken } = await auth();
-  const token = await getToken();
-  try {
-    const url = `${API_URL}/${path}`;
 
+  try {
     if (!token) {
       throw new Error('No token found');
     }
 
+    const url = `${API_URL}/${path}`;
+
     options = {
       ...options,
+      method,
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         ...(options?.headers || {}),
         Authorization: `Bearer ${token}`,
       },
+      body: body ? JSON.stringify(body) : undefined,
     };
+
     const response = await fetch(url, options);
 
     if (!response.ok) {

@@ -3,7 +3,7 @@ export type APIErrorResponse = {
 };
 
 export type Diagram = {
-  id: string
+  _id: string
   name: string
   description: string
   mermaid: string

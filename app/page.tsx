@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function Home() {
-  const { isSignedIn } = useUser() // `isSignedIn` from Clerk user hook
-  const router = useRouter()
+  const { isSignedIn } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     if (isSignedIn) {
