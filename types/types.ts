@@ -4,12 +4,22 @@ export type APIErrorResponse = {
 
 export type Diagram = {
   _id: string
-  name: string
+  title: string
+  type: string
   description: string
-  mermaid: string
-  createdBy: number
-  createdAt: string
-  updatedAt: string
+  mermaid_code: string
+  created_by: string
+  created_at: Date
+  updated_at: Date
 };
 
-export type DiagramList = Omit<Diagram, 'mermaid' | 'createdBy'>;
+export type DiagramList = Omit<Diagram, 'mermaid_code' | 'created_by' | 'created_at'>;
+
+export type MermaidThemes = "default" | "base" | "dark" | "forest" | "neutral" | "null";
+
+export type Message = {
+  message: string
+  my: boolean
+}
+
+

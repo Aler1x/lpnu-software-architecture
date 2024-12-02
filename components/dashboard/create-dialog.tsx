@@ -22,7 +22,7 @@ type CreateDiagramProps = {
 }
 
 export default function CreateDialog({ onDiagramCreated }: CreateDiagramProps) {
-  const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState('');
   const { getToken } = useAuth();
@@ -34,7 +34,7 @@ export default function CreateDialog({ onDiagramCreated }: CreateDiagramProps) {
     }
     try {
       await fetchClient('api/diagrams', token, 'POST', {
-        name,
+        title,
         description,
       });
       setOpen(false);
@@ -60,14 +60,14 @@ export default function CreateDialog({ onDiagramCreated }: CreateDiagramProps) {
         </DialogHeader>
         <div className="grid gap-4 items-center">
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="name">
-              Name
+            <Label htmlFor="title">
+              Title
             </Label>
             <Input
-              id="name"
+              id="title"
               placeholder='My Diagram'
               className="col-span-3"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -83,7 +83,7 @@ export default function CreateDialog({ onDiagramCreated }: CreateDiagramProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={createDiagram} className='w-full' disabled={name.length === 0}>
+          <Button type="submit" onClick={createDiagram} className='w-full' disabled={title.length === 0}>
             Create
           </Button>
         </DialogFooter>

@@ -21,7 +21,7 @@ export async function fetchClient<T>(
       method,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
         ...(options?.headers || {}),
         Authorization: `Bearer ${token}`,
       },

@@ -27,8 +27,21 @@ export default function DiagramsList({ diagrams: initialDiagrams }: DiagramListP
   };
 
   const filteredDiagrams = diagrams.filter(diagram =>
-    diagram.name.toLowerCase().includes(searchQuery.toLowerCase())
+    diagram.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDelete = async (id: string) => {
+    try {
+      const token = await getToken();
+      if (!token) {
+        return;
+      }
+      await fetchClient(`api/diagrams/${id}`, token, 'DELETE');
+      await fetchDiagrams();
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <main className={cn('container mx-auto px-4 flex flex-1 flex-col')}>
@@ -42,9 +55,9 @@ export default function DiagramsList({ diagrams: initialDiagrams }: DiagramListP
         </div>
       )}
 
-      <div className={cn('grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5')}>
+      <div className={cn('grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4')}>
         {filteredDiagrams.length > 0 &&
-          filteredDiagrams.map((diagram) => <Diagram key={diagram._id} diagram={diagram} />)
+          filteredDiagrams.map((diagram) => <Diagram key={diagram._id} diagram={diagram} onDelete={handleDelete} />)
         }
       </div>
       <div className={cn('absolute bottom-10 right-10')}>
