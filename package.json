@@ -1,11 +1,11 @@
 {
   "name": "lpnu-software-architecture",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -H 192.168.1.69",
     "build": "next build",
-    "preview": "next build && next start -H 192.168.1.69",
+    "preview": "next start -H 192.168.1.69",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch"
