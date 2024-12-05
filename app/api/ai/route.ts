@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 if (!process.env.OPENAI_API_KEY) {
-  // throw new Error('Invalid/Missing environment variable: "OPENAI_API_KEY"');
+  throw new Error('Invalid/Missing environment variable: "OPENAI_API_KEY"');
 }
 
 const openai = new OpenAI();

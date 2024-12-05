@@ -9,10 +9,10 @@ import mermaid from 'mermaid'
 import { cn } from '@/lib/utils'
 import { themes, presets, presetDiagrams } from '@/types/mock'
 import { useEffect, useRef, useState } from 'react';
-import type { Diagram, MermaidThemes } from '@/types/types'
+import type { Diagram, MermaidThemes, Message } from '@/types/types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-// import Chat from '@/components/edit/chat'
+import Chat from '@/components/edit/chat'
 import { Save, Upload } from 'lucide-react'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { fetchClient } from '@/lib/fetchClient'
@@ -29,16 +29,16 @@ type DiagramPageProps = {
 
 export default function DiagramPageClient({ id }: DiagramPageProps) {
   const [code, setCode] = useState('');
-  const [theme, setTheme] = useState<MermaidThemes>('default');
+  const [theme, setTheme] = useState<MermaidThemes>('dark');
   const [svgCode, setSvgCode] = useState('')
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const previewRef = useRef<HTMLDivElement>(null)
 
-  // const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
 
   const [transformOrigin, setTransformOrigin] = useState({ x: '50%', y: '50%' });
   const [zoomLevel, setZoomLevel] = useState(1);
-  // const [blockInput, setBlockInput] = useState(false);
+  const [blockInput, setBlockInput] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();
@@ -208,21 +208,21 @@ export default function DiagramPageClient({ id }: DiagramPageProps) {
     }
   }
 
-  // const handleSendMessage = async (message: string) => {
-  //   setChatMessages([...chatMessages, { message, my: false }])
-  //   try {
-  //     const token = await getToken();
-  //     if (!token) {
-  //       return;
-  //     }
-  //     setBlockInput(true)
-  //     const response = await fetchClient<string>('api/ai', token, 'POST', { prompt: message, diagram: code });
-  //     setChatMessages([...chatMessages, { message: response, my: false }])
-  //     setBlockInput(false)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  const handleSendMessage = async (message: string) => {
+    setChatMessages([...chatMessages, { message, my: false }])
+    try {
+      const token = await getToken();
+      if (!token) {
+        return;
+      }
+      setBlockInput(true)
+      const response = await fetchClient<string>('api/ai', token, 'POST', { prompt: message, diagram: code });
+      setChatMessages([...chatMessages, { message: response, my: false }])
+      setBlockInput(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleSave = async () => {
     try {
@@ -312,9 +312,9 @@ export default function DiagramPageClient({ id }: DiagramPageProps) {
                   }}
                 />
               </div>
-              {/* <div className="flex-1 overflow-auto w-full p-4">
+              <div className="flex-1 overflow-auto w-full p-4">
                 <Chat messages={chatMessages} onMessageSend={handleSendMessage} blockInput={blockInput} />
-              </div> */}
+              </div>
             </div>
           </ResizablePanel>
 

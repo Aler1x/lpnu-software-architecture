@@ -7,6 +7,7 @@ import { useAuth } from '@clerk/nextjs'
 import Diagram from './diagram'
 import CreateDialog from './create-dialog'
 import { Input } from '../ui/input'
+import DeleteDialog from './delete-dialog'
 
 export type DiagramListProps = {
   diagrams: DiagramList[];
@@ -15,6 +16,8 @@ export type DiagramListProps = {
 export default function DiagramsList({ diagrams: initialDiagrams }: DiagramListProps) {
   const [diagrams, setDiagrams] = useState<DiagramList[]>(initialDiagrams);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState('');
   const { getToken } = useAuth();
 
   const fetchDiagrams = async () => {
@@ -30,18 +33,26 @@ export default function DiagramsList({ diagrams: initialDiagrams }: DiagramListP
     diagram.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
     try {
       const token = await getToken();
       if (!token) {
         return;
       }
-      await fetchClient(`api/diagrams/${id}`, token, 'DELETE');
+      await fetchClient(`api/diagrams/${deleteId}`, token, 'DELETE');
       await fetchDiagrams();
     } catch (error) {
       console.error(error)
+    } finally {
+      setIsOpen(false)
+      setDeleteId('')
     }
   }
+
+  const openDelete = (id: string) => {
+    setDeleteId(id)
+    setIsOpen(true)
+  };
 
   return (
     <main className={cn('container mx-auto px-4 flex flex-1 flex-col')}>
@@ -57,9 +68,10 @@ export default function DiagramsList({ diagrams: initialDiagrams }: DiagramListP
 
       <div className={cn('grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4')}>
         {filteredDiagrams.length > 0 &&
-          filteredDiagrams.map((diagram) => <Diagram key={diagram._id} diagram={diagram} onDelete={handleDelete} />)
+          filteredDiagrams.map((diagram) => <Diagram key={diagram._id} diagram={diagram} onDelete={openDelete}/>)
         }
       </div>
+      <DeleteDialog isOpen={isOpen} setIsOpen={setIsOpen} onDiagramDeleted={handleDelete} />
       <div className={cn('absolute bottom-10 right-10')}>
         <CreateDialog onDiagramCreated={fetchDiagrams} />
       </div>
