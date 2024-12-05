@@ -38,7 +38,7 @@ export default function DiagramPageClient({ id }: DiagramPageProps) {
 
   const [transformOrigin, setTransformOrigin] = useState({ x: '50%', y: '50%' });
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [blockInput, setBlockInput] = useState(true);
+  const [blockInput, setBlockInput] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();

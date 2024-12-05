@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
   console.log('POST request received');
   const { diagram, prompt, history } = await req.json();
 
-  if (!diagram || !prompt) {
-    return NextResponse.json({ error: 'Missing diagram or prompt' }, { status: 400 });
+  if (!prompt) {
+    return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- i hate typescript
@@ -35,14 +35,12 @@ export async function POST(req: NextRequest) {
   try {
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [
-        ...messages,
-      ],
+      messages: [...messages],
     });
 
-    const aiResponse = completion.choices[0].message;
+    const response = completion.choices[0].message.content;
 
-    return NextResponse.json({ response: aiResponse });
+    return NextResponse.json(response);
   } catch (error) {
     console.error('OpenAI API error:', error);
     return NextResponse.json({ error: 'Failed to get AI response' }, { status: 500 });
